@@ -75,6 +75,8 @@ do
 		--storagectl IDE \
 		--port 1 --device 0 \
 		--type dvddrive --medium "$VBOX_GUEST_ADDITIONS"
+    # VirtualBox 3.x Linux Guest Additions require an '-x86' suffix
+    # VirtualBox 4.x Linux Guest Additions dont have $ARCH suffix anymore
 	eval "$SSH \"
 		set -e
 		sudo apt-get -y install linux-headers-\\\$(uname -r) build-essential
@@ -82,10 +84,7 @@ do
 		do
 			sleep 1
 		done
-		sudo /media/cdrom/VBoxLinuxAdditions-$([ "$ARCH" = "i386" ] \
-			&& echo x86 \
-			|| echo amd64
-		).run
+		sudo /media/cdrom/VBoxLinuxAdditions.run
 		sudo umount /media/cdrom
 	\""
 	VBoxManage storageattach "$VBOX" \
